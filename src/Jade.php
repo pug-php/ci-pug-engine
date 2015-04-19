@@ -5,7 +5,7 @@
  */
 
 class Jade {
-    
+
     protected $CI;
     protected $jade;
     protected $view_path;
