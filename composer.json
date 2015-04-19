@@ -1,5 +1,5 @@
 {
-    "name": "kylekatarnls/ci-jade",
+    "name": "ci-jade/ci-jade",
     "description": "HAML-like template engine for CodeIgniter",
     "keywords": ["jade", "minification", "template"],
     "homepage": "https://github.com/ci-jade/ci-jade",
