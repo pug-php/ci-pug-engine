@@ -32,12 +32,16 @@ trait Jade {
         return $this;
     }
 
-    public function view($view = NULL, array $data = array(), $return = false) {
+    public function view($view = NULL, array $data = array(), $return = FALSE) {
 
-        if(is_array($view)) {
+        if(is_array($view) || $view === TRUE) {
             $return = !! $data;
             $data = $view;
             $view = NULL;
+        }
+        if($data === TRUE) {
+            $data = array();
+            $return = TRUE;
         }
         if(is_null($view)) {
             $view = $this->router->class . DIRECTORY_SEPARATOR . $this->router->method;
