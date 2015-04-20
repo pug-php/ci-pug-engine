@@ -159,6 +159,89 @@ $this->settings([
 
 If the folder does not exists, the library will try to create it.
 
+## Return the view instead of displaying it
+
+```php
+$content = $this->view('foo', TRUE);
+echo str_replace('<hr>', '----------', $content);
+// works also with vars
+$content = $this->view('foo', [
+  'var1' => 1,
+  'var2' => 2
+], TRUE);
+// and also with view auto-selection
+$content = $this->view(TRUE);
+// see view auto-selection section below
+```
+
+## Controller settings
+
+This feature requires PHP 5.6 and allow you to specify settings for the whole controller.
+
+```php
+class Welcome extends CI_Controller {
+
+  use Jade;
+  
+  const SETTINGS = [
+    'cache' => true
+    // here, you can add any option
+  ];
+  
+  public foo() {
+    $this->view('welcome/foo'); // will use the SETTINGS class constant
+  }
+  
+  public bar() {
+    $this
+    ->settings([
+      'cache' => false// will override the SETTINGS class constant
+    ])
+    ->view('welcome/bar');
+  }
+}
+```
+
+Tip: you can create and abstract controller with ```use Jade;``` and SETTINGS constant,
+then extend this abstract class from several controllers.
+
+## View auto-selection
+
+If you do not specify the view file, the most logic one with the given
+class and method will be taken:
+
+```php
+class Jade_Controller extends CI_Controller {
+  use Jade;
+}
+class Foo extends Jade_Controller {
+  public function index() {
+    $this->view(); // load application/views/foo/index.jade
+    // or application/views/foo.jade if it does not exists
+  }
+  public function bar() {
+    $this->view(); // load application/views/foo/bar.jade
+    // or application/views/foo/bar/index.jade if it does not exists
+  }
+}
+class Yep extends Jade_Controller {
+  public function index() {
+    $this->view([
+      'some' => 'var'
+    ]); // load application/views/yep/index.jade
+    // or application/views/yep.jade if it does not exists
+  }
+  public function nop() {
+    $content = $this->view(TRUE); // load application/views/yep/nop.jade
+    // or application/views/yep/nop/index.jade if it does not exists
+  }
+  public function dontKnow() {
+    $this->view('yep/nop'); // load application/views/yep/nop.jade
+    // or application/views/yep/nop/index.jade if it does not exists
+  }
+}
+```
+
 ## Custom views folder
 
 If you do no store your *.jade* files in **application/views**,
