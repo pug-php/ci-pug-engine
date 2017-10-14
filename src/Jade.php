@@ -28,7 +28,8 @@ trait Jade {
                 throw new Exception("Cache folder does not exists and cannot be created.", 1);
             }
         }
-        $this->jade = new Jade\Jade($options);
+        $className = class_exists('Jade\Jade') ? 'Jade\Jade' : 'Pug\Pug';
+        $this->jade = new $className($options);
         return $this;
     }
 
@@ -62,10 +63,13 @@ trait Jade {
             }
         }
         $data = array_merge($this->load->get_vars(), $data);
+        $method = method_exists($this->jade, 'renderFile')
+            ? [$this->jade, 'renderFile']
+            : [$this->jade, 'render'];
         if($return) {
-            return $this->jade->render($view, $data);
+            return call_user_func($method, $view, $data);
         } else {
-            echo $this->jade->render($view, $data);
+            echo call_user_func($method, $view, $data);
             return $this;
         }
     }
