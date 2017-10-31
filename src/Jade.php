@@ -28,7 +28,7 @@ trait Jade {
                 throw new Exception("Cache folder does not exists and cannot be created.", 1);
             }
         }
-        $className = class_exists('Jade\Jade') ? 'Jade\Jade' : 'Pug\Pug';
+        $className = class_exists('Pug\Pug') ? 'Pug\Pug' : 'Jade\Jade';
         $this->jade = new $className($options);
         return $this;
     }
