@@ -169,8 +169,8 @@ trait CiJade
     /**
      * Render the view with Pug and returns the HTML output.
      *
-     * @param string|null $view   view name/path
-     * @param array       $data   list of local variables
+     * @param string|null $view view name/path
+     * @param array       $data list of local variables
      *
      * @throws Exception
      *
@@ -184,8 +184,8 @@ trait CiJade
     /**
      * Render the view with Pug and display the HTML output.
      *
-     * @param string|null $view   view name/path
-     * @param array       $data   list of local variables
+     * @param string|null $view view name/path
+     * @param array       $data list of local variables
      *
      * @throws Exception
      *
