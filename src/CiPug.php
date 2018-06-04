@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__ . '/CiJade.php');
+require_once __DIR__.'/CiJade.php';
 
 trait CiPug
 {
