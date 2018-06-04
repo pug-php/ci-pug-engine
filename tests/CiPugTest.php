@@ -140,4 +140,32 @@ class CiPugTest extends TestCase
         }
         rmdir($directory);
     }
+
+    public function testLegacyJadeFileExtension()
+    {
+        $controller = new Controller();
+        $html = $controller->view('foo/bar', true);
+
+        $this->assertSame('<div><span></span></div>', $html);
+
+        $controller = new Controller();
+        $controller->disallowJadeFile();
+        $message = '';
+
+        try {
+            $controller->view('foo/bar', true);
+        } catch (\Phug\CompilerException $exp) {
+            $message = $exp->getMessage();
+        }
+
+        $this->assertRegExp('/foo[\\\\\\/]bar[\\\\\\/]index\.pug not found/', $message);
+
+        $controller = new Controller();
+        $controller->allowJadeFile();
+        $html = $controller->view('foo/bar', true);
+
+        $this->assertSame('<div><span></span></div>', $html);
+
+        $controller->disallowJadeFile();
+    }
 }

@@ -5,8 +5,54 @@
  */
 trait CiJade
 {
+    /**
+     * @var \Pug\Pug|null
+     */
     protected $jade;
+
+    /**
+     * @var string|null
+     */
     protected $jade_view_path;
+
+    /**
+     * @var bool
+     */
+    protected $allow_jade_file = true;
+
+    /**
+     * Allow legacy .jade file extension. (Reduce performances).
+     *
+     * @return $this
+     */
+    public function allowJadeFile()
+    {
+        $this->allow_jade_file = true;
+
+        return $this;
+    }
+
+    /**
+     * Disallow legacy .jade file extension. (Improve performances).
+     *
+     * @return $this
+     */
+    public function disallowJadeFile()
+    {
+        $this->allow_jade_file = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns true if legacy .jade file extension is allowed.
+     *
+     * @return bool
+     */
+    public function isJadeFileAllowed()
+    {
+        return $this->allow_jade_file;
+    }
 
     /**
      * Extract view path from the options or return the default app view path.
@@ -82,6 +128,24 @@ trait CiJade
     }
 
     /**
+     * Returns a jade file path if it match the given view path without extension.
+     *
+     * @param string $view
+     *
+     * @return string
+     */
+    private function lookForJadeFile($view)
+    {
+        $view .= '.jade';
+        if (!file_exists($view)) {
+            $isIndex = (strtr('\\', '/', substr($view, -11)) === '/index.jade');
+            $view = $isIndex ? substr($view, 0, -11).'.jade' : substr($view, 0, -5).DIRECTORY_SEPARATOR.'index.jade';
+        }
+
+        return $view;
+    }
+
+    /**
      * Returns the matching path of a given view name.
      *
      * @param string $view view name
@@ -94,12 +158,8 @@ trait CiJade
         if (!file_exists($view)) {
             $isIndex = (strtr('\\', '/', substr($view, -10)) === '/index.pug');
             $view = $isIndex ? substr($view, 0, -10).'.pug' : substr($view, 0, -4).DIRECTORY_SEPARATOR.'index.pug';
-            if (!file_exists($view)) {
-                $view = substr($view, 0, $isIndex ? -4 : -10).'.jade';
-                if (!file_exists($view)) {
-                    $isIndex = (strtr('\\', '/', substr($view, -11)) === '/index.jade');
-                    $view = $isIndex ? substr($view, 0, -11).'.jade' : substr($view, 0, -5).DIRECTORY_SEPARATOR.'index.jade';
-                }
+            if ($this->isJadeFileAllowed() && !file_exists($view)) {
+                $view = $this->lookForJadeFile(substr($view, 0, $isIndex ? -4 : -10));
             }
         }
 

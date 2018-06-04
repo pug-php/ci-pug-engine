@@ -251,3 +251,20 @@ $this->settings([
   'view_path' => APPPATH . 'pug-templates'
 ]);
 ```
+
+## Disallow `.jade` legacy file extension
+
+If you use only up-to-date `.pug` file extension, you can disallow the `.jade` extension
+to avoid unnecessary file existence checks:
+
+```php
+class Pug_Controller extends CI_Controller {
+  use CiPug;
+
+  public function __construct()
+  {
+    parent::__construct();
+    $this->disallowJadeFile();
+  }
+}
+```
