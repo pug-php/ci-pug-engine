@@ -9,7 +9,7 @@ to use Pug for all your views or just some of them.
 and save rendered files the *cache* folder, then serve cached file with
 no performance loss, views will be loaded as fast as the equivalent
 php views. You can also use ```'cache' => '/your/cutom/path```
-- ci-pug wait for you to load it. Only controllers with ```use Pug;```
+- ci-pug wait for you to load it. Only controllers with ```use CiPug;```
 will load the wrapper, and until you call ```$this->settings()``` or
 ```$this->view()``` in the controller, the template engine will not be
 loaded.
@@ -40,7 +40,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Main extends CI_Controller {
 
-  use Pug;
+  use CiPug;
 
   public function index()
   {
@@ -69,7 +69,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Main extends CI_Controller {
 
-  use Pug;
+  use CiPug;
 
   public function index()
   {
@@ -95,7 +95,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Main extends CI_Controller {
 
-  use Pug;
+  use CiPug;
 
   public function index()
   {
@@ -137,7 +137,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Main extends CI_Controller {
 
-  use Pug;
+  use CiPug;
 
   public function index()
   {
@@ -181,7 +181,7 @@ This feature requires PHP 5.6 and allow you to specify settings for the whole co
 ```php
 class Welcome extends CI_Controller {
 
-  use Pug;
+  use CiPug;
 
   const SETTINGS = [
     'cache' => true
@@ -202,7 +202,7 @@ class Welcome extends CI_Controller {
 }
 ```
 
-Tip: you can create and abstract controller with ```use Pug;``` and SETTINGS constant,
+Tip: you can create and abstract controller with ```use CiPug;``` and SETTINGS constant,
 then extend this abstract class from several controllers.
 
 ## View auto-selection
@@ -212,7 +212,7 @@ class and method will be taken:
 
 ```php
 class Pug_Controller extends CI_Controller {
-  use Pug;
+  use CiPug;
 }
 class Foo extends Pug_Controller {
   public function index() {
