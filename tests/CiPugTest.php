@@ -28,6 +28,17 @@ class CiPugTest extends TestCase
 
     public function testSetViewPath()
     {
+        $controller = new Controller();
+        $controller->settings([
+            'view_path' => __DIR__.'/sub-dir/',
+        ]);
+        $html = $controller->view('test', true);
+
+        $this->assertSame('<p>Subdirectory</p>', $html);
+    }
+
+    public function testSetCache()
+    {
         $directory = sys_get_temp_dir().'/foo';
         $controller = new Controller();
         $controller->settings([
@@ -45,6 +56,30 @@ class CiPugTest extends TestCase
             unlink("$directory/$file");
         }
         rmdir($directory);
+
+        $this->assertSame(1, $count);
+    }
+
+    public function testUseDefaultCache()
+    {
+        $directory = __DIR__.'/cache/jade';
+        $controller = new Controller();
+        $controller->settings([
+            'cache' => true,
+        ]);
+        $controller->view('test', true);
+        $count = 0;
+        foreach (scandir($directory) as $file) {
+            if ($file === '.' || $file === '..') {
+                continue;
+            }
+            if (substr($file, -4) === '.php') {
+                $count++;
+            }
+            unlink("$directory/$file");
+        }
+        rmdir($directory);
+        rmdir(__DIR__.'/cache');
 
         $this->assertSame(1, $count);
     }
