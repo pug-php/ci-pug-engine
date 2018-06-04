@@ -85,4 +85,3 @@ class CiPugTest extends TestCase
         rmdir($directory);
     }
 }
-
