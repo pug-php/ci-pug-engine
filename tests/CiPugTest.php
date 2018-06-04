@@ -147,24 +147,29 @@ class CiPugTest extends TestCase
         $html = $controller->view('foo/bar', true);
 
         $this->assertSame('<div><span></span></div>', $html);
+        $this->assertTrue($controller->isJadeFileAllowed());
 
-        $controller = new Controller();
         $controller->disallowJadeFile();
-        $message = '';
+        $output = '';
 
         try {
-            $controller->view('foo/bar', true);
+            $html = $controller->view('foo/bar', true);
+            // Pug-php 2 compatibility
+            if (preg_match('/foo[\\\\\\/]bar[\\\\\\/]index\.pug$/', $html)) {
+                $output = 'foo/bar/index.pug not found';
+            }
         } catch (\Phug\CompilerException $exp) {
-            $message = $exp->getMessage();
+            $output = $exp->getMessage();
         }
 
-        $this->assertRegExp('/foo[\\\\\\/]bar[\\\\\\/]index\.pug not found/', $message);
+        $this->assertRegExp('/foo[\\\\\\/]bar[\\\\\\/]index\.pug not found/', $output);
+        $this->assertFalse($controller->isJadeFileAllowed());
 
-        $controller = new Controller();
         $controller->allowJadeFile();
         $html = $controller->view('foo/bar', true);
 
         $this->assertSame('<div><span></span></div>', $html);
+        $this->assertTrue($controller->isJadeFileAllowed());
 
         $controller->disallowJadeFile();
     }
