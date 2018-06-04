@@ -26,6 +26,27 @@ class CiPugTest extends TestCase
         $this->assertSame('<div><span></span></div>', $html);
     }
 
+    public function testRenderView()
+    {
+        $controller = new Controller();
+        $html = $controller->renderView('test');
+
+        $this->assertSame('<p>Hello world!</p>', $html);
+    }
+
+    public function testDisplayView()
+    {
+        $controller = new Controller();
+
+        ob_start();
+        $self = $controller->displayView('test');
+        $html = ob_get_contents();
+        ob_end_clean();
+
+        $this->assertSame($self, $controller);
+        $this->assertSame('<p>Hello world!</p>', $html);
+    }
+
     public function testSetViewPath()
     {
         $controller = new Controller();
