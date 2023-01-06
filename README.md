@@ -3,7 +3,7 @@ ci-pug is a library for CodeIgniter to enable [Pug Template Engine](http://jade-
 views with *.pug* or *.jade* extension.
 
 - all files in the view folder ending with .pug or .jade can be rendered from the
-controllers but you can still use any other files as views. So you're free
+controllers, but you can still use any other files as views. So you're free
 to use Pug for all your views or just some of them.
 - use the ```'cache' => true``` setting to render your views only once
 and save rendered files the *cache* folder, then serve cached file with
@@ -16,8 +16,8 @@ loaded.
 
 ## Installation
 
-You need PHP 5.4 or later to run ci-pug. If you use a earlier version
-of PHP we recommand you to upgrade. If you cannot you can download
+You need PHP 5.4 or later to run ci-pug. If you use an earlier version
+of PHP we recommend you to upgrade. If you cannot, you can download
 the [library version](https://github.com/pug-php/ci-pug) of
 ci-pug (available on PHP 5.3).
 
@@ -36,11 +36,12 @@ Be sure ```$config['composer_autoload'] = true;``` in your
 #### application/controllers/Main.php
 ```php
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Main extends CI_Controller {
+namespace App\Controllers;
 
-  use CiPug;
+class Home extends BaseController
+{
+  use \CiPug;
 
   public function index()
   {
@@ -65,11 +66,12 @@ html(lang='en')
 #### application/controllers/Main.php
 ```php
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Main extends CI_Controller {
+namespace App\Controllers;
 
-  use CiPug;
+class Home extends BaseController
+{
+  use \CiPug;
 
   public function index()
   {
@@ -91,11 +93,12 @@ or
 
 ```php
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Main extends CI_Controller {
+namespace App\Controllers;
 
-  use CiPug;
+class Home extends BaseController
+{
+  use \CiPug;
 
   public function index()
   {
@@ -110,7 +113,7 @@ class Main extends CI_Controller {
   }
 }
 ```
-All variables from ```->view()``` or ```->load->vars()``` are
+All variables from ```->view()``` or ```->addVars()``` are
 merged and available in the view.
 
 
@@ -133,11 +136,12 @@ We recommend you to do it in production to serve the views faster.
 #### application/controllers/Main.php
 ```php
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Main extends CI_Controller {
+namespace App\Controllers;
 
-  use CiPug;
+class Home extends BaseController
+{
+  use \CiPug;
 
   public function index()
   {
@@ -157,7 +161,7 @@ $this->settings([
 ]);
 ```
 
-If the folder does not exists, the library will try to create it.
+If the folder does not exist, the library will try to create it.
 
 ## Return the view instead of displaying it
 
@@ -179,20 +183,26 @@ $content = $this->view(true);
 This feature requires PHP 5.6 and allow you to specify settings for the whole controller.
 
 ```php
-class Welcome extends CI_Controller {
+<?php
 
-  use CiPug;
+namespace App\Controllers;
+
+class Home extends BaseController
+{
+  use \CiPug;
 
   const SETTINGS = [
     'cache' => true
     // here, you can add any option
   ];
 
-  public foo() {
+  public foo()
+  {
     $this->view('welcome/foo'); // will use the SETTINGS class constant
   }
 
-  public bar() {
+  public bar()
+  {
     $this
     ->settings([
       'cache' => false// will override the SETTINGS class constant
@@ -211,40 +221,54 @@ If you do not specify the view file, the most logic one with the given
 class and method will be taken:
 
 ```php
-class Pug_Controller extends CI_Controller {
+abstract class BaseController extends Controller
+{
   use CiPug;
+  // ...
 }
-class Foo extends Pug_Controller {
-  public function index() {
+
+class Foo extends BaseController
+{
+  public function index()
+  {
     $this->view(); // load application/views/foo/index.pug
-    // or application/views/foo.pug if it does not exists
+    // or application/views/foo.pug if it does not exist
   }
-  public function bar() {
+
+  public function bar()
+  {
     $this->view(); // load application/views/foo/bar.pug
-    // or application/views/foo/bar/index.pug if it does not exists
+    // or application/views/foo/bar/index.pug if it does not exist
   }
 }
-class Yep extends Pug_Controller {
-  public function index() {
+
+class Yep extends BaseController
+{
+  public function index()
+  {
     $this->view([
       'some' => 'var'
     ]); // load application/views/yep/index.pug
-    // or application/views/yep.pug if it does not exists
+    // or application/views/yep.pug if it does not exist
   }
-  public function nop() {
+
+  public function nop()
+  {
     $content = $this->view(true); // load application/views/yep/nop.pug
-    // or application/views/yep/nop/index.pug if it does not exists
+    // or application/views/yep/nop/index.pug if it does not exist
   }
-  public function dontKnow() {
+
+  public function dontKnow()
+  {
     $this->view('yep/nop'); // load application/views/yep/nop.pug
-    // or application/views/yep/nop/index.pug if it does not exists
+    // or application/views/yep/nop/index.pug if it does not exist
   }
 }
 ```
 
 ## Custom views folder
 
-If you do no store your *.pug* files in **application/views**,
+If you do not store your *.pug* files in **application/views**,
 use the ```view_path``` setting:
 ```php
 $this->settings([
@@ -258,12 +282,12 @@ If you use only up-to-date `.pug` file extension, you can disallow the `.jade` e
 to avoid unnecessary file existence checks:
 
 ```php
-class Pug_Controller extends CI_Controller {
+class PugController extends BaseController
+{
   use CiPug;
 
   public function __construct()
   {
-    parent::__construct();
     $this->disallowJadeFile();
   }
 }
