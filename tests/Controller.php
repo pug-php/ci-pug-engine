@@ -6,11 +6,23 @@ define('APPPATH', __DIR__.'/');
 
 class Vars
 {
+    private $vars = [
+        'foo' => 'bar',
+    ];
+
     public function get_vars()
     {
-        return [
-            'foo' => 'bar',
-        ];
+        return $this->vars;
+    }
+
+    public function vars($vars)
+    {
+        $this->vars = array_merge($this->vars, $vars);
+    }
+
+    public function reset()
+    {
+        $this->vars = [];
     }
 }
 
@@ -52,5 +64,10 @@ class Controller
     public function index()
     {
         $this->view('myview');
+    }
+
+    public function resetVars()
+    {
+        $this->load->reset();
     }
 }

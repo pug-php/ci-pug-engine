@@ -24,5 +24,10 @@
     },
     "autoload": {
         "psr-0": { "": "src/" }
+    },
+    "config": {
+        "allow-plugins": {
+            "nodejs-php-fallback/nodejs-php-fallback": true
+        }
     }
 }
