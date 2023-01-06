@@ -6,6 +6,11 @@
 trait CiJade
 {
     /**
+     * @var array
+     */
+    private $jade_vars = [];
+
+    /**
      * @var \Pug\Pug|null
      */
     protected $jade;
@@ -184,7 +189,7 @@ trait CiJade
         }
 
         $view = $this->getViewPath($view);
-        $data = array_merge($this->load->get_vars(), $data);
+        $data = array_merge($this->getAllVars(), $data);
         $method = method_exists($this->jade, 'renderFile')
             ? [$this->jade, 'renderFile']
             : [$this->jade, 'render'];
@@ -254,5 +259,28 @@ trait CiJade
     public function displayView($view = null, $data = [])
     {
         return $this->view($view, $data, false);
+    }
+
+    public function addVars(array $vars)
+    {
+        if (isset($this->load) && is_object($this->load) && method_exists($this->load, 'vars')) {
+            $this->load->vars($vars);
+
+            return;
+        }
+
+        $this->jade_vars = array_merge($this->jade_vars, $vars);
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllVars()
+    {
+        if (isset($this->load) && is_object($this->load) && method_exists($this->load, 'get_vars')) {
+            return $this->load->get_vars();
+        }
+
+        return $this->jade_vars;
     }
 }

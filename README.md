@@ -73,7 +73,7 @@ class Main extends CI_Controller {
 
   public function index()
   {
-    $this->load->vars([
+    $this->addVars([
       'title' => 'My Pug View',
       'authors' => [
         'Luke',
