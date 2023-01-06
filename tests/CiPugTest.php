@@ -5,6 +5,7 @@ namespace Tests;
 use PHPUnit\Framework\TestCase;
 
 include_once __DIR__.'/Controller.php';
+include_once __DIR__.'/Ci4Controller.php';
 
 class CiPugTest extends TestCase
 {
@@ -172,5 +173,30 @@ class CiPugTest extends TestCase
         $this->assertTrue($controller->isJadeFileAllowed());
 
         $controller->disallowJadeFile();
+    }
+
+    public function testVars()
+    {
+        $controller = new Controller();
+        $controller->resetVars();
+        $controller->addVars(['a' => 'A', 'b' => 'B']);
+
+        $this->assertSame(['a' => 'A', 'b' => 'B'], $controller->getAllVars());
+
+        $controller->addVars(['a' => 'AA', 'c' => 'C']);
+
+        $this->assertSame(['a' => 'AA', 'b' => 'B', 'c' => 'C'], $controller->getAllVars());
+    }
+
+    public function testVarsCi4()
+    {
+        $controller = new Ci4Controller();
+        $controller->addVars(['a' => 'A', 'b' => 'B']);
+
+        $this->assertSame(['a' => 'A', 'b' => 'B'], $controller->getAllVars());
+
+        $controller->addVars(['a' => 'AA', 'c' => 'C']);
+
+        $this->assertSame(['a' => 'AA', 'b' => 'B', 'c' => 'C'], $controller->getAllVars());
     }
 }
