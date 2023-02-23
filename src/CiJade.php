@@ -75,7 +75,7 @@ trait CiJade
             return $path;
         }
 
-        return APPPATH.'views';
+        return APPPATH.(defined('CI_VERSION') && CI_VERSION < 4 ? 'views' : 'Views');
     }
 
     /**
